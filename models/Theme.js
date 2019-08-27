@@ -1,5 +1,11 @@
 const theme = (sequelize, DataTypes) => {
 	const Theme = sequelize.define('theme', {
+		id: {
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
+			primaryKey: true,
+			allowNull: false
+		},
 		name: {
 			type: DataTypes.STRING,
 			unique: true,
@@ -12,17 +18,14 @@ const theme = (sequelize, DataTypes) => {
 		link: {
 			type: DataTypes.STRING,
 			allowNull: false
-		}
+		},
+
+	},
+	{
+		tableName: 'theme'
 	});
-	Theme.associate = models => {
-		Theme.belongsTo(models.CareerPath);
-	};
-	Theme.associate = models => {
-		Theme.belongsTo(models.SkillPath);
-	};
-	Theme.associate = models => {
-		Theme.belongsTo(models.CoursesList);
-	};
+
+
 	return Theme;
 };
 

@@ -2,9 +2,15 @@ import Sequelize from 'sequelize';
 
 const sequelize = new Sequelize('CodecademiDB', 'postgres', 'Postgres', {
 	dialect: 'postgres',
+	define: {
+		timestamps: false
+	}
 });
 
 const models = {
+	CoursesList: sequelize.import('./CoursesList'),
+	Theme: sequelize.import('./Theme'),
+	Language: sequelize.import('./Language'),
 	Knowledge: sequelize.import('./Knowledge'),
 };
 

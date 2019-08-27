@@ -10,7 +10,10 @@ const knowledge = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			unique: true
 		}
-	});
+	},
+		{
+			tableName: 'knowledge'
+		});
 
 	return Knowledge;
 };

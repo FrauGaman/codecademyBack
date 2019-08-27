@@ -1,5 +1,11 @@
 const language = (sequelize, DataTypes) => {
 	const Language = sequelize.define('language', {
+		id: {
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
+			primaryKey: true,
+			allowNull: false
+		},
 		name: {
 			type: DataTypes.STRING,
 			unique: true,
@@ -13,16 +19,11 @@ const language = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: false
 		}
-	});
-	Language.associate = models => {
-		Language.belongsTo(models.CareerPath);
-	};
-	Language.associate = models => {
-		Language.belongsTo(models.SkillPath);
-	};
-	Language.associate = models => {
-		Language.belongsTo(models.CoursesList);
-	};
+	},
+		{
+			tableName: 'language'
+		});
+
 	return Language;
 };
 

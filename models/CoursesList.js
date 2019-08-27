@@ -1,7 +1,14 @@
 const coursesList = (sequelize, DataTypes) => {
 	const CoursesList = sequelize.define('coursesList', {
+		id: {
+			type: DataTypes.INTEGER,
+			autoIncrement: true,
+			primaryKey: true,
+			allowNull: false
+		},
 		importance: {
-			type: DataTypes.STRING
+			type: DataTypes.STRING,
+			allowNull: false
 		},
 		title: {
 			type: DataTypes.STRING,
@@ -17,15 +24,20 @@ const coursesList = (sequelize, DataTypes) => {
 		},
 		borderColor: {
 			type: DataTypes.STRING,
-		},
-	});
+		}
+	},
+		{
+			tableName: 'coursesList'
+		});
+	CoursesList.associate = (models) => {
+		CoursesList.belongsToMany(models.Theme, {
+			through: 'coursesListTheme',
+			as: 'theme',
+			foreignKey: 'coursesListId'
+		});
+	};
 
 	return CoursesList;
 };
 
 export default coursesList;
-
-
-
-	"theme": [1, 3],
-	"language": []
