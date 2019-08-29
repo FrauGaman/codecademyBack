@@ -23,7 +23,6 @@ const language = (sequelize, DataTypes) => {
 		{
 			tableName: 'language'
 		});
-
 	return Language;
 };
 

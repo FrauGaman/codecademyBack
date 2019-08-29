@@ -19,13 +19,10 @@ const theme = (sequelize, DataTypes) => {
 			type: DataTypes.STRING,
 			allowNull: false
 		},
-
 	},
-	{
-		tableName: 'theme'
-	});
-
-
+		{
+			tableName: 'theme'
+		});
 	return Theme;
 };
 

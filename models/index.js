@@ -8,6 +8,8 @@ const sequelize = new Sequelize('CodecademiDB', 'postgres', 'Postgres', {
 });
 
 const models = {
+	CoursesCareer: sequelize.import('./CoursesCareer'),
+	CoursesSkill: sequelize.import('./CoursesSkill'),
 	CoursesList: sequelize.import('./CoursesList'),
 	Theme: sequelize.import('./Theme'),
 	Language: sequelize.import('./Language'),
