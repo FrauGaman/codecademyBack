@@ -9,7 +9,7 @@ export const skillGet = function(request, response) {
 
 export const skillCreate =  function (request, response) {
 	if(!request.body) return response.sendStatus(400);
-	const { img, bgColor, title, descr, period, theme } = request.body;
+	const { img, bgColor, title, descr, period, theme, language } = request.body;
 	models.CoursesSkill.create({
 		img: img,
 		bgColor: bgColor,
@@ -17,10 +17,8 @@ export const skillCreate =  function (request, response) {
 		descr: descr,
 		period: period
 	}).then((res) => {
-		 return (theme.map(async (item) =>  {
-			const themeDB = await models.Theme.findByPk(item);
-			res.addTheme(themeDB);
-		 }));
+		res.addTheme(theme);
+		res.addLanguage(language);
 	}).then(() => {
 		response.send({success: true})
 	}).catch((err) => {
@@ -30,7 +28,7 @@ export const skillCreate =  function (request, response) {
 
 export const skillEdit = function (request, response) {
 	if(!request.body) return response.sendStatus(400);
-	const { img, bgColor, title, descr, period, theme } = request.body;
+	const { img, bgColor, title, descr, period, theme, language } = request.body;
 	models.CoursesSkill.update(
 		{
 			img: img,
@@ -39,27 +37,15 @@ export const skillEdit = function (request, response) {
 			descr: descr,
 			period: period
 		},
-		{ where: { id: request.params.id } }
-	)
-		.then((res) => {
-		// res.getTheme().then(th => response.send(th));
-
-		response.send(res)
-
-		// models.Theme.findAll({where: {id: theme}})
-		// 	.then(themes => {
-		// 		response.send(themes);
-		// 	})
-		// return (theme.map(async (item) =>  {
-		// 	const themeDB = await models.Theme.findByPk(item);
-		// 		res.addTheme(themeDB);
-		// }));
+		{ returning: true, where: { id: request.params.id } }
+	).then(([ rowsUpdate, [updatedData] ]) => {
+		updatedData.setTheme(theme);
+		updatedData.setLanguage(language);
+	}).then(() => {
+		response.send({success: true});
+	}).catch((err) => {
+		console.log(err)
 	})
-	// 	.then(() => {
-	// 	response.send({success: true});
-	// }).catch((err) => {
-	// 	console.log(err)
-	// })
 };
 
 export const skillDelete = function(request, response) {

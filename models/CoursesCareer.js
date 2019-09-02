@@ -19,12 +19,11 @@ const careerPath = (sequelize, DataTypes) => {
 		},
 		descr: {
 			type: DataTypes.STRING,
-			unique: true,
 			allowNull: false
 		}
 	},
 		{
-			tableName: 'skillPath'
+			tableName: 'careerPath'
 		});
 	CareerPath.associate = (models) => {
 		CareerPath.belongsToMany(models.Theme, {
