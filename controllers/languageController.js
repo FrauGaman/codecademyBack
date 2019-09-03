@@ -1,9 +1,35 @@
 import models from '../models/index';
+import Sequelize from 'sequelize';
 
 export const languageGet = function(request, response) {
-	if(!request.body) return response.sendStatus(400);
-	models.Language.findAll({raw:true}).then(language=>{
-		response.send({language});
+
+	let queryFindParam = Object.keys(request.query).find(elem => elem.includes('_like'));
+	let findField = queryFindParam && queryFindParam.replace('_like', '');
+	let findElem = queryFindParam && request.query[queryFindParam];
+	let options = {	raw: true };
+
+	(request.query._order === undefined) && (request.query._order = 'asc');
+	if (request.query._sort !== undefined) {
+		options = {
+			...options,
+			order: [
+				[request.query._sort, request.query._order]
+			],
+		}
+	}
+	if(queryFindParam !== undefined && findElem !== undefined) {
+		options = {
+			...options,
+			where: {
+				[findField]: {
+					[Sequelize.Op.like]: `%${findElem}%`,
+				}
+			}
+		}
+	}
+
+	models.Language.findAll(options).then(language=>{
+		response.send(language);
 	}).catch(err=>console.log(err));
 };
 

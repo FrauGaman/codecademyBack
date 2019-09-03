@@ -37,7 +37,7 @@ app.post('/language', languageCreate);
 app.put('/language/:id', languageEdit);
 app.delete('/language/:id', languageDelete);
 
-app.get('/knowledge', knowledgeGet);
+app.get(`/knowledge`, knowledgeGet);
 app.post('/knowledge', knowledgeCreate);
 app.put('/knowledge/:id', knowledgeEdit);
 app.delete('/knowledge/:id', knowledgeDelete);
