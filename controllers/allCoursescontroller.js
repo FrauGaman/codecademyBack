@@ -1,13 +1,13 @@
 import models from '../models/index';
 import Sequelize from 'sequelize';
 
-export const coursesGet = function(request, response) {
-
+export const coursesGet = async function(request, response) {
 	let queryFindParam = Object.keys(request.query).find(elem => elem.includes('_like'));
 	let findField = queryFindParam && queryFindParam.replace('_like', '');
 	let findElem = queryFindParam && request.query[queryFindParam];
 	let options = {
-		include: [{	model: models.Theme, as: 'theme'}, { model: models.Language, as: 'language'}],
+		row: true,
+		include: [{model: models.Theme, as: 'theme'}, {model: models.Language, as: 'language'}],
 		where: {}
 	};
 	(request.query._order === undefined) && (request.query._order = 'asc');
@@ -20,16 +20,24 @@ export const coursesGet = function(request, response) {
 		}
 	}
 	if(queryFindParam !== undefined && findElem !== undefined) {
-		options.where[findField]={
-				[Sequelize.Op.like]: `%${findElem}%`,
-			}
+		options.where[findField] = {
+			[Sequelize.Op.like]: `%${findElem}%`,
+		}
+	}
+	if (request.query._page && request.query._limit) {
+		const offset = (request.query._page-1) * request.query._limit;
+		const limit = request.query._limit;
+		options = {
+			...options,
+			offset,
+			limit
+		}
 	}
 
-	let helpOptions =  {
+	let helpOptions = {
 		row: true,
-		include: [{	model: models.Theme, as: 'theme'}, { model: models.Language, as: 'language'}]
+		include: [{model: models.Theme, as: 'theme'}, {model: models.Language, as: 'language'}]
 	};
-
 	if (request.query.theme !== undefined) {
 		(request.query.theme.length === 1) && (request.query.theme = [request.query.theme]);
 		helpOptions.include[0].where = {id: request.query.theme}
@@ -39,33 +47,27 @@ export const coursesGet = function(request, response) {
 		helpOptions.include[1].where = {id: request.query.language}
 	}
 
-	models.CoursesList.findAll(helpOptions).then(courses => {
-		console.log(JSON.stringify(helpOptions));
+	const courses = await models.CoursesList.findAll(helpOptions);
 		let filterData = [];
 		courses.map(item => {
 			filterData.push(item.id)
 		});
-		options.where.id = filterData;
-		console.log(filterData)
-	}).catch(err => {
-		console.log(err)
+		options.where['id'] = filterData;
+
+	await models.CoursesList.findAll(options).then(courses => {
+		let coursesList = [];
+		courses.map(elem => {
+			const { id, importance, title, descr, icon, borderColor, theme, language } = elem;
+			let elemItem = {
+				id, importance, title, descr, icon, borderColor,
+				theme: theme.map(item => item.id),
+				language: language.map(item => item.id),
+			};
+			coursesList.push(elemItem)
+		});
+		response.send(coursesList);
 	})
-	//
-	// models.CoursesList.findAll(options).then(courses => {
-	// 	// console.log(options);
-	// 	let coursesList = [];
-	// 	courses.map(elem => {
-	// 		const { id, importance, title, descr, icon, borderColor, theme, language } = elem;
-	// 		let elemItem = {
-	// 			id, importance, title, descr, icon, borderColor,
-	// 			theme: theme.map(item => item.id),
-	// 			language: language.map(item => item.id),
-	// 		};
-	// 		coursesList.push(elemItem)
-	// 	});
-	// 	response.send(coursesList);
-	// })
-	// 	.catch(err=>console.log(err))
+		.catch(err=>console.log(err))
 };
 
 export const coursesCreate =  function (request, response) {

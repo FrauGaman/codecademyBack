@@ -26,6 +26,16 @@ export const themeGet = function(request, response) {
 			}
 		}
 	}
+	if (request.query._page && request.query._limit) {
+		const offset = (request.query._page-1) * request.query._limit;
+		const limit = request.query._limit;
+		options = {
+			...options,
+			offset,
+			limit
+		}
+	}
+
 	models.Theme.findAll(options).then(theme=>{
 		response.send(theme);
 	}).catch(err=>console.log(err));

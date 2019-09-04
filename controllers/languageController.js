@@ -2,7 +2,6 @@ import models from '../models/index';
 import Sequelize from 'sequelize';
 
 export const languageGet = function(request, response) {
-
 	let queryFindParam = Object.keys(request.query).find(elem => elem.includes('_like'));
 	let findField = queryFindParam && queryFindParam.replace('_like', '');
 	let findElem = queryFindParam && request.query[queryFindParam];
@@ -25,6 +24,15 @@ export const languageGet = function(request, response) {
 					[Sequelize.Op.like]: `%${findElem}%`,
 				}
 			}
+		}
+	}
+	if (request.query._page && request.query._limit) {
+		const offset = (request.query._page-1) * request.query._limit;
+		const limit = request.query._limit;
+		options = {
+			...options,
+			offset,
+			limit
 		}
 	}
 

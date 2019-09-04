@@ -1,16 +1,15 @@
 import models from '../models';
 import Sequelize from 'sequelize';
 
-export const skillGet = function(request, response) {
-
+export const skillGet = async function(request, response) {
 	let queryFindParam = Object.keys(request.query).find(elem => elem.includes('_like'));
 	let findField = queryFindParam && queryFindParam.replace('_like', '');
 	let findElem = queryFindParam && request.query[queryFindParam];
 	let options = {
 		row: true,
-		include: [{	model: models.Theme, as: 'theme'}, { model: models.Language, as: 'language'	}	]
+		include: [{model: models.Theme, as: 'theme'}, { model: models.Language, as: 'language'}],
+		where: {}
 	};
-
 	(request.query._order === undefined) && (request.query._order = 'asc');
 	if (request.query._sort !== undefined) {
 		options = {
@@ -21,17 +20,41 @@ export const skillGet = function(request, response) {
 		}
 	}
 	if(queryFindParam !== undefined && findElem !== undefined) {
+		options.where[findField] = {
+			[Sequelize.Op.like]: `%${findElem}%`,
+		}
+	}
+	if (request.query._page && request.query._limit) {
+		const offset = (request.query._page-1) * request.query._limit;
+		const limit = request.query._limit;
 		options = {
 			...options,
-			where: {
-				[findField]: {
-					[Sequelize.Op.like]: `%${findElem}%`,
-				}
-			}
+			offset,
+			limit
 		}
 	}
 
-	models.CoursesSkill.findAll(options).then(skill => {
+	let helpOptions = {
+		row: true,
+		include: [{model: models.Theme, as: 'theme'}, {model: models.Language, as: 'language'}]
+	};
+	if (request.query.theme !== undefined) {
+		(request.query.theme.length === 1) && (request.query.theme = [request.query.theme]);
+		helpOptions.include[0].where = {id: request.query.theme}
+	}
+	if (request.query.language !== undefined) {
+		(request.query.language.length === 1) && (request.query.language = [request.query.language]);
+		helpOptions.include[1].where = {id: request.query.language}
+	}
+
+	const skill = await models.CoursesSkill.findAll(helpOptions);
+	let filterData = [];
+	skill.map(item => {
+		filterData.push(item.id)
+	});
+	options.where['id'] = filterData;
+
+	await models.CoursesSkill.findAll(options).then(skill => {
 		let coursesList = [];
 		skill.map(elem => {
 			const { id, img, bgColor, title, descr, period, theme, language } = elem;
