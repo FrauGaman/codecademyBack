@@ -1,76 +1,44 @@
 import models from '../models';
-import Sequelize from 'sequelize';
+import {likeData, organizeData, paginateData} from './scripts/queryParams';
+import { mapCareer } from './scripts/mapData';
 
 export const careerGet = async function(request, response) {
-	let queryFindParam = Object.keys(request.query).find(elem => elem.includes('_like'));
-	let findField = queryFindParam && queryFindParam.replace('_like', '');
-	let findElem = queryFindParam && request.query[queryFindParam];
 	let options = {
-		row: true,
 		include: [{model: models.Theme, as: 'theme'}, {model: models.Language, as: 'language'},{ model: models.Knowledge, as: 'knowledge'}],
 		where: {}
 	};
-	(request.query._order === undefined) && (request.query._order = 'asc');
-	if (request.query._sort !== undefined) {
-		options = {
-			...options,
-			order: [
-				[request.query._sort, request.query._order]
-			],
-		}
-	}
-	if(queryFindParam !== undefined && findElem !== undefined) {
-		options.where[findField] = {
-			[Sequelize.Op.like]: `%${findElem}%`,
-		}
-	}
-	if (request.query._page && request.query._limit) {
-		const offset = (request.query._page-1) * request.query._limit;
-		const limit = request.query._limit;
-		options = {
-			...options,
-			offset,
-			limit
-		}
-	}
-
+	let likeQuery = likeData(request.query, options);
+	(likeQuery !== undefined) && (options = {...options, ...likeQuery});
+	let sortQuery = organizeData(request.query._sort, request.query._order);
+	(sortQuery !== undefined) && (options = {...options, ...sortQuery});
+	let paginateQuery = paginateData(request.query._page, request.query._limit);
+	(paginateQuery !== undefined) && (options = {...options, ...paginateQuery});
 	let helpOptions = {
-		row: true,
-		include: [{model: models.Theme, as: 'theme'}, {model: models.Language, as: 'language'},{model: models.Knowledge, as: 'knowledge'}]
+		include: [{model: models.Theme, as: 'theme'}, {model: models.Language, as: 'language'}, {model: models.Knowledge, as: 'knowledge'}]
 	};
-	if (request.query.theme !== undefined) {
-		(request.query.theme.length === 1) && (request.query.theme = [request.query.theme]);
-		helpOptions.include[0].where = {id: request.query.theme}
-	}
-	if (request.query.language !== undefined) {
-		(request.query.language.length === 1) && (request.query.language = [request.query.language]);
-		helpOptions.include[1].where = {id: request.query.language}
-	}
-	if (request.query.knowledge !== undefined) {
-		(request.query.knowledge.length === 1) && (request.query.knowledge = [request.query.knowledge]);
-		helpOptions.include[2].where = {id: request.query.knowledge}
-	}
-
-	const skill = await models.CoursesCareer.findAll(helpOptions);
+	(request.query.theme !== undefined) && (helpOptions.include[0].where = {id: request.query.theme});
+	(request.query.language !== undefined) && (helpOptions.include[1].where = {id: request.query.language});
+	(request.query.knowledge !== undefined) && (helpOptions.include[2].where = {id: request.query.knowledge});
+	const careerId = await models.CoursesCareer.findAll(helpOptions);
 	let filterData = [];
-	skill.map(item => {
-		filterData.push(item.id)
-	});
+	careerId.map(item => filterData.push(item.id));
 	options.where['id'] = filterData;
+	const careerData = await models.CoursesCareer.findAll(options);
+	try {
+		let careerList = mapCareer(careerData);
+		response.send(careerList);
+	} catch (err) {
+		console.log(err)
+	}
+};
 
-	await models.CoursesCareer.findAll(options).then(career => {
-		let coursesList = [];
-		career.map(elem => {
-			const { id, img, bgColor, title, descr, theme, language, knowledge } = elem;
-			let elemItem = {
-				id, img, bgColor, title, descr,
-				theme: theme.map(item => item.id),
-				language: language.map(item => item.id),
-				knowledge: knowledge.map(item => item.id),
-			};
-			coursesList.push(elemItem)
-		});
-		response.send(coursesList);
+export const careerGetById = function (request, response) {
+	models.CoursesCareer.findAll({
+		include: [{model: models.Theme, as: 'theme'}, {model: models.Language, as: 'language'}, {model: models.Knowledge, as: 'knowledge'}],
+		where: { id: request.params.id }
+	}).then(career => {
+		let careerList = mapCareer(career);
+		response.send(careerList);
 	}).catch(err=>console.log(err));
 };
 

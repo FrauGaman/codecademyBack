@@ -1,43 +1,24 @@
 import models from '../models/index';
-import Sequelize from 'sequelize';
+import { likeData, organizeData, paginateData } from './scripts/queryParams';
 
 export const languageGet = function(request, response) {
-	let queryFindParam = Object.keys(request.query).find(elem => elem.includes('_like'));
-	let findField = queryFindParam && queryFindParam.replace('_like', '');
-	let findElem = queryFindParam && request.query[queryFindParam];
-	let options = {	raw: true };
-
-	(request.query._order === undefined) && (request.query._order = 'asc');
-	if (request.query._sort !== undefined) {
-		options = {
-			...options,
-			order: [
-				[request.query._sort, request.query._order]
-			],
-		}
-	}
-	if(queryFindParam !== undefined && findElem !== undefined) {
-		options = {
-			...options,
-			where: {
-				[findField]: {
-					[Sequelize.Op.like]: `%${findElem}%`,
-				}
-			}
-		}
-	}
-	if (request.query._page && request.query._limit) {
-		const offset = (request.query._page-1) * request.query._limit;
-		const limit = request.query._limit;
-		options = {
-			...options,
-			offset,
-			limit
-		}
-	}
-
-	models.Language.findAll(options).then(language=>{
+	let options = {};
+	let likeQuery = likeData(request.query, options);
+	(likeQuery !== undefined) && (options = {...options, ...likeQuery});
+	let sortQuery = organizeData(request.query._sort, request.query._order);
+	(sortQuery !== undefined) && (options = {...options, ...sortQuery});
+	let paginateQuery = paginateData(request.query._page, request.query._limit);
+	(paginateQuery !== undefined) && (options = {...options, ...paginateQuery});
+	models.Language.findAll(options).then(language => {
 		response.send(language);
+	}).catch(err=>console.log(err));
+};
+
+export const languageGetById = function (request, response) {
+	models.Language.findAll({
+		where: { id: request.params.id }
+	}).then(language => {
+		response.send(language)
 	}).catch(err=>console.log(err));
 };
 
