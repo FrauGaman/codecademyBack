@@ -50,7 +50,7 @@ app.put('/knowledge/:id', idValidation, dataValidation, knowledgeEdit);
 app.delete('/knowledge/:id', idValidation, knowledgeDelete);
 
 sequelize.sync().then( async () => {
-	app.listen(3000, () => {
-		console.log(`Example app listening on port 3000!`)
-	})
+    app.listen(3000, () => {
+        console.log(`Example app listening on port 3000!`)
+    })
 });

@@ -57,5 +57,3 @@ export const knowledgeDelete = function(request, response) {
     console.log(err)
   })
 };
-
-

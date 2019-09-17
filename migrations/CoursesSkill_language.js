@@ -1,16 +1,16 @@
 'use strict';
 module.exports = {
 	up: (queryInterface, Sequelize) => {
-		return queryInterface.createTable('coursesSkill_language', {
+		return queryInterface.createTable('coursesList_language', {
 			id: {
 				autoIncrement: true,
 				primaryKey: true,
 				type: Sequelize.INTEGER
 			},
-			skillPathId: {
+			coursesListId: {
 				type: Sequelize.INTEGER,
 				references: {
-					model: 'skillPath',
+					model: 'coursesList',
 					key: 'id'
 				},
 				allowNull: false
@@ -34,6 +34,6 @@ module.exports = {
 		});
 	},
 	down: (queryInterface, Sequelize) => {
-		return queryInterface.dropTable('coursesSkill_language');
+		return queryInterface.dropTable('coursesList_language');
 	}
 };

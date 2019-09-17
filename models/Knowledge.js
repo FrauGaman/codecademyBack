@@ -3,12 +3,12 @@ module.exports = (sequelize, DataTypes) => {
   const Knowledge = sequelize.define('knowledge', {
     name: {
       type: DataTypes.STRING,
-      allowNull: false,
-      unique: true
+      unique: true,
+      allowNull: false
     }
   }, {});
-  Knowledge.associate = function(models) {
-    Knowledge.belongsToMany(models.CoursesCareer, {
+  Theme.associate = function(models) {
+    Theme.belongsToMany(models.CoursesCareer, {
       through: 'coursesCareer_knowledge',
       as: 'careerPath',
       foreignKey: 'knowledgeId'
