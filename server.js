@@ -3,9 +3,9 @@ const bodyParser = require("body-parser");
 import { sequelize } from './models';
 // import { careerGet, careerGetById, careerCreate, careerEdit, careerDelete } from './controllers/careerController';
 // import { skillGet, skillGetById, skillCreate, skillEdit, skillDelete } from './controllers/skillController';
-// import { coursesGet, coursesGetById, coursesCreate, coursesEdit, coursesDelete } from './controllers/allCoursesController';
-// import { themeGet, themeGetById, themeCreate, themeEdit, themeDelete } from './controllers/themeController';
-// import { languageGet, languageGetById, languageCreate, languageEdit, languageDelete } from './controllers/languageController';
+import { coursesGet, coursesGetById, coursesCreate, coursesEdit, coursesDelete } from './controllers/allCoursesController';
+import { themeGet, themeGetById, themeCreate, themeEdit, themeDelete } from './controllers/themeController';
+import { languageGet, languageGetById, languageCreate, languageEdit, languageDelete } from './controllers/languageController';
 import { knowledgeGet, knowledgeById, knowledgeCreate, knowledgeEdit, knowledgeDelete } from './controllers/knowledgeController';
 import { idValidation, dataValidation } from './middleware/validationMiddlevare';
 
@@ -24,24 +24,24 @@ app.use(bodyParser.json());
 // app.post('/skillPath', dataValidation, skillCreate);
 // app.put('/skillPath/:id', idValidation, dataValidation, skillEdit);
 // app.delete('/skillPath/:id', idValidation, skillDelete);
+
+app.get('/coursesList', coursesGet);
+app.get('/coursesList/:id', idValidation, coursesGetById);
+app.post('/coursesList', dataValidation, coursesCreate);
+app.put('/coursesList/:id', idValidation, dataValidation, coursesEdit);
+app.delete('/coursesList/:id', idValidation, coursesDelete);
+
+app.get('/theme', themeGet);
+app.get('/theme/:id', idValidation, themeGetById);
+app.post('/theme', dataValidation, themeCreate);
+app.put('/theme/:id', idValidation, dataValidation, themeEdit);
+app.delete('/theme/:id', idValidation, themeDelete);
 //
-// app.get('/coursesList', coursesGet);
-// app.get('/coursesList/:id', idValidation, coursesGetById);
-// app.post('/coursesList', dataValidation, coursesCreate);
-// app.put('/coursesList/:id', idValidation, dataValidation, coursesEdit);
-// app.delete('/coursesList/:id', idValidation, coursesDelete);
-//
-// app.get('/theme',themeGet);
-// app.get('/theme/:id', idValidation, themeGetById);
-// app.post('/theme', dataValidation, themeCreate);
-// app.put('/theme/:id', idValidation, dataValidation, themeEdit);
-// app.delete('/theme/:id', idValidation, themeDelete);
-//
-// app.get('/language', languageGet);
-// app.get('/language/:id', idValidation, languageGetById);
-// app.post('/language', dataValidation, languageCreate);
-// app.put('/language/:id', idValidation, dataValidation, languageEdit);
-// app.delete('/language/:id', idValidation, languageDelete);
+app.get('/language', languageGet);
+app.get('/language/:id', idValidation, languageGetById);
+app.post('/language', dataValidation, languageCreate);
+app.put('/language/:id', idValidation, dataValidation, languageEdit);
+app.delete('/language/:id', idValidation, languageDelete);
 
 app.get('/knowledge', knowledgeGet);
 app.get('/knowledge/:id', idValidation, knowledgeById);

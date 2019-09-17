@@ -18,7 +18,7 @@ module.exports = {
       themeId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'themes',
+          model: 'theme',
           key: 'id'
         },
         allowNull: false

@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const CoursesList = sequelize.define('coursesList', {
+  const CoursesList = sequelize.define('CoursesList', {
     importance: {
       type: DataTypes.STRING,
       allowNull: false
@@ -20,7 +20,9 @@ module.exports = (sequelize, DataTypes) => {
     borderColor: {
       type: DataTypes.STRING,
     }
-  }, {});
+  }, {
+    tableName: 'coursesList'
+  });
   CoursesList.associate = function(models) {
     CoursesList.belongsToMany(models.Theme, {
       through: 'coursesList_theme',

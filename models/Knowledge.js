@@ -1,14 +1,16 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Knowledge = sequelize.define('knowledge', {
+  const Knowledge = sequelize.define('Knowledge', {
     name: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false
     }
-  }, {});
-  Theme.associate = function(models) {
-    Theme.belongsToMany(models.CoursesCareer, {
+  }, {
+    tableName: 'knowledge'
+  });
+  Knowledge.associate = function(models) {
+    Knowledge.belongsToMany(models.CareerPath, {
       through: 'coursesCareer_knowledge',
       as: 'careerPath',
       foreignKey: 'knowledgeId'

@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const CoursesCareer = sequelize.define('careerPath', {
+  const CoursesCareer = sequelize.define('CareerPath', {
     img: {
       type: DataTypes.STRING,
     },
@@ -16,19 +16,21 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     }
-  }, {});
+  }, {
+    tableName: 'careerPath'
+  });
   CoursesCareer.associate = function(models) {
-    CareerPath.belongsToMany(models.Theme, {
+    CoursesCareer.belongsToMany(models.Theme, {
       through: 'coursesCareer_theme',
       as: 'theme',
       foreignKey: 'careerPathId'
     });
-    CareerPath.belongsToMany(models.Language, {
+    CoursesCareer.belongsToMany(models.Language, {
       through: 'coursesCareer_language',
       as: 'language',
       foreignKey: 'careerPathId'
     });
-    CareerPath.belongsToMany(models.Knowledge, {
+    CoursesCareer.belongsToMany(models.Knowledge, {
       through: 'coursesCareer_knowledge',
       as: 'knowledge',
       foreignKey: 'careerPathId'

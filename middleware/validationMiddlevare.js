@@ -29,7 +29,7 @@ export const dataValidation = (request, response, next) => {
 		if(!request.body.descr) {
 			message.push(ERROR_MESSAGE.NO_DESCR)
 		} else {
-			let maxLengthVal = setMaxLength(10, request.body.descr);
+			let maxLengthVal = setMaxLength(100, request.body.descr);
 			(maxLengthVal !== undefined) && message.push(maxLengthVal)
 		}
 	}

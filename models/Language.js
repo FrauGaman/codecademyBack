@@ -1,24 +1,36 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const Language = sequelize.define('language', {
+  const Language = sequelize.define('Language', {
     name: {
       type: DataTypes.STRING,
       unique: true,
       allowNull: false
+    },
+    descr: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
+    link: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     }
-  }, {});
-  Theme.associate = function(models) {
-    Theme.belongsToMany(models.CoursesList, {
+  }, {
+    tableName: 'language'
+  });
+  Language.associate = function(models) {
+    Language.belongsToMany(models.CoursesList, {
       through: 'coursesList_language',
       as: 'coursesList',
-      foreignKey: 'languageId'
+      foreignKey: 'languageId',
+      onDelete: 'cascade'
     });
-    Theme.belongsToMany(models.CoursesSkill, {
+    Language.belongsToMany(models.SkillPath, {
       through: 'coursesSkill_language',
       as: 'skillPath',
       foreignKey: 'languageId'
     });
-    Theme.belongsToMany(models.CoursesCareer, {
+    Language.belongsToMany(models.CareerPath, {
       through: 'coursesCareer_language',
       as: 'careerPath',
       foreignKey: 'languageId'

@@ -18,7 +18,7 @@ module.exports = {
       languageId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'languages',
+          model: 'language',
           key: 'id'
         },
         allowNull: false
