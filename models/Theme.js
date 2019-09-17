@@ -22,8 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         Theme.belongsToMany(models.CoursesList, {
             through: 'coursesList_theme',
             as: 'coursesList',
-            foreignKey: 'themeId',
-            onDelete: 'cascade'
+            foreignKey: 'themeId'
         });
         Theme.belongsToMany(models.SkillPath, {
             through: 'coursesSkill_theme',

@@ -11,17 +11,23 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'coursesList',
-          key: 'id'
+          key: 'id',
+          as: 'coursesListId'
         },
-        allowNull: false
+        allowNull: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       themeId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'theme',
-          key: 'id'
+          key: 'id',
+          as: 'themeId'
         },
-        allowNull: false
+        allowNull: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       createdAt: {
         allowNull: false,

@@ -11,17 +11,23 @@ module.exports = {
         type: Sequelize.INTEGER,
         references: {
           model: 'coursesList',
-          key: 'id'
+          key: 'id',
+          as: 'coursesListId'
         },
-        allowNull: false
+        allowNull: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       languageId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'language',
-          key: 'id'
+          key: 'id',
+          as: 'languageId'
         },
-        allowNull: false
+        allowNull: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       createdAt: {
         allowNull: false,

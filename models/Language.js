@@ -22,8 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     Language.belongsToMany(models.CoursesList, {
       through: 'coursesList_language',
       as: 'coursesList',
-      foreignKey: 'languageId',
-      onDelete: 'cascade'
+      foreignKey: 'languageId'
     });
     Language.belongsToMany(models.SkillPath, {
       through: 'coursesSkill_language',
