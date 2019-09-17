@@ -1,29 +1,28 @@
-const theme = (sequelize, DataTypes) => {
-	const Theme = sequelize.define('theme', {
-		id: {
-			type: DataTypes.INTEGER,
-			autoIncrement: true,
-			primaryKey: true,
-			allowNull: false
-		},
-		name: {
-			type: DataTypes.STRING,
-			unique: true,
-			allowNull: false
-		},
-		descr: {
-			type: DataTypes.STRING,
-			allowNull: false
-		},
-		link: {
-			type: DataTypes.STRING,
-			allowNull: false
-		},
-	},
-		{
-			tableName: 'theme'
-		});
-	return Theme;
+'use strict';
+module.exports = (sequelize, DataTypes) => {
+    const Theme = sequelize.define('theme', {
+        name: {
+            type: DataTypes.STRING,
+            unique: true,
+            allowNull: false
+        }
+    }, {});
+    Theme.associate = function(models) {
+        Theme.belongsToMany(models.CoursesList, {
+            through: 'coursesList_theme',
+            as: 'coursesList',
+            foreignKey: 'themeId'
+        });
+        Theme.belongsToMany(models.CoursesSkill, {
+            through: 'coursesSkill_theme',
+            as: 'skillPath',
+            foreignKey: 'themeId'
+        });
+        Theme.belongsToMany(models.CoursesCareer, {
+            through: 'coursesCareer_theme',
+            as: 'careerPath',
+            foreignKey: 'themeId'
+        });
+    };
+    return Theme;
 };
-
-export default theme;
