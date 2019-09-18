@@ -18,11 +18,11 @@ export const skillGet = async function(request, response) {
 	};
 	(request.query.theme !== undefined) && (helpOptions.include[0].where = {id: request.query.theme});
 	(request.query.language !== undefined) && (helpOptions.include[1].where = {id: request.query.language});
-	const skillId = await models.CoursesSkill.findAll(helpOptions);
+	const skillId = await models.SkillPath.findAll(helpOptions);
 	let filterData = [];
 	skillId.map(item => filterData.push(item.id));
 	options.where['id'] = filterData;
-	const skillData = await models.CoursesSkill.findAll(options);
+	const skillData = await models.SkillPath.findAll(options);
 	try{
 		let skillList = mapSkill(skillData);
 		response.send(skillList);
@@ -32,7 +32,7 @@ export const skillGet = async function(request, response) {
 };
 
 export const skillGetById = function (request, response) {
-	models.CoursesSkill.findAll({
+	models.SkillPath.findAll({
 		include: [{model: models.Theme, as: 'theme'}, {model: models.Language, as: 'language'}],
 		where: { id: request.params.id }
 	}).then(skill => {
@@ -44,7 +44,7 @@ export const skillGetById = function (request, response) {
 export const skillCreate =  function (request, response) {
 	if(!request.body) return response.sendStatus(400);
 	const { img, bgColor, title, descr, period, theme, language } = request.body;
-	models.CoursesSkill.create({
+	models.SkillPath.create({
 		img: img,
 		bgColor: bgColor,
 		title: title,
@@ -63,7 +63,7 @@ export const skillCreate =  function (request, response) {
 export const skillEdit = function (request, response) {
 	if(!request.body) return response.sendStatus(400);
 	const { img, bgColor, title, descr, period, theme, language } = request.body;
-	models.CoursesSkill.update(
+	models.SkillPath.update(
 		{
 			img: img,
 			bgColor: bgColor,
@@ -83,7 +83,7 @@ export const skillEdit = function (request, response) {
 };
 
 export const skillDelete = function(request, response) {
-	models.CoursesSkill.destroy({
+	models.SkillPath.destroy({
 		where: {id: request.params.id}
 	}).then(() => {
 		response.send({success: true});

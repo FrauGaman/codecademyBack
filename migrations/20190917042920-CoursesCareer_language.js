@@ -13,7 +13,9 @@ module.exports = {
           model: 'careerPath',
           key: 'id'
         },
-        allowNull: false
+        allowNull: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       languageId: {
         type: Sequelize.INTEGER,
@@ -21,7 +23,9 @@ module.exports = {
           model: 'language',
           key: 'id'
         },
-        allowNull: false
+        allowNull: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       createdAt: {
         allowNull: false,

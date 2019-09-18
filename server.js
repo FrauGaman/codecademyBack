@@ -1,8 +1,8 @@
 import express from 'express';
 const bodyParser = require("body-parser");
 import { sequelize } from './models';
-// import { careerGet, careerGetById, careerCreate, careerEdit, careerDelete } from './controllers/careerController';
-// import { skillGet, skillGetById, skillCreate, skillEdit, skillDelete } from './controllers/skillController';
+import { careerGet, careerGetById, careerCreate, careerEdit, careerDelete } from './controllers/careerController';
+import { skillGet, skillGetById, skillCreate, skillEdit, skillDelete } from './controllers/skillController';
 import { coursesGet, coursesGetById, coursesCreate, coursesEdit, coursesDelete } from './controllers/allCoursesController';
 import { themeGet, themeGetById, themeCreate, themeEdit, themeDelete } from './controllers/themeController';
 import { languageGet, languageGetById, languageCreate, languageEdit, languageDelete } from './controllers/languageController';
@@ -13,17 +13,17 @@ const app = express();
 //parser for usual JSON
 app.use(bodyParser.json());
 
-// app.get('/careerPath', careerGet);
-// app.get('/careerPath/:id', idValidation, careerGetById);
-// app.post('/careerPath', dataValidation, careerCreate);
-// app.put('/careerPath/:id', idValidation, dataValidation, careerEdit);
-// app.delete('/careerPath/:id', idValidation, careerDelete);
-//
-// app.get('/skillPath', skillGet);
-// app.get('/skillPath/:id', idValidation, skillGetById);
-// app.post('/skillPath', dataValidation, skillCreate);
-// app.put('/skillPath/:id', idValidation, dataValidation, skillEdit);
-// app.delete('/skillPath/:id', idValidation, skillDelete);
+app.get('/careerPath', careerGet);
+app.get('/careerPath/:id', idValidation, careerGetById);
+app.post('/careerPath', dataValidation, careerCreate);
+app.put('/careerPath/:id', idValidation, dataValidation, careerEdit);
+app.delete('/careerPath/:id', idValidation, careerDelete);
+
+app.get('/skillPath', skillGet);
+app.get('/skillPath/:id', idValidation, skillGetById);
+app.post('/skillPath', dataValidation, skillCreate);
+app.put('/skillPath/:id', idValidation, dataValidation, skillEdit);
+app.delete('/skillPath/:id', idValidation, skillDelete);
 
 app.get('/coursesList', coursesGet);
 app.get('/coursesList/:id', idValidation, coursesGetById);

@@ -13,7 +13,9 @@ module.exports = {
           model: 'careerPath',
           key: 'id'
         },
-        allowNull: false
+        allowNull: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       knowledgeId: {
         type: Sequelize.INTEGER,
@@ -21,7 +23,9 @@ module.exports = {
           model: 'knowledge',
           key: 'id'
         },
-        allowNull: false
+        allowNull: false,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
       },
       createdAt: {
         allowNull: false,

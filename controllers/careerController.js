@@ -19,11 +19,11 @@ export const careerGet = async function(request, response) {
 	(request.query.theme !== undefined) && (helpOptions.include[0].where = {id: request.query.theme});
 	(request.query.language !== undefined) && (helpOptions.include[1].where = {id: request.query.language});
 	(request.query.knowledge !== undefined) && (helpOptions.include[2].where = {id: request.query.knowledge});
-	const careerId = await models.CoursesCareer.findAll(helpOptions);
+	const careerId = await models.CareerPath.findAll(helpOptions);
 	let filterData = [];
 	careerId.map(item => filterData.push(item.id));
 	options.where['id'] = filterData;
-	const careerData = await models.CoursesCareer.findAll(options);
+	const careerData = await models.CareerPath.findAll(options);
 	try {
 		let careerList = mapCareer(careerData);
 		response.send(careerList);
@@ -33,7 +33,7 @@ export const careerGet = async function(request, response) {
 };
 
 export const careerGetById = function (request, response) {
-	models.CoursesCareer.findAll({
+	models.CareerPath.findAll({
 		include: [{model: models.Theme, as: 'theme'}, {model: models.Language, as: 'language'}, {model: models.Knowledge, as: 'knowledge'}],
 		where: { id: request.params.id }
 	}).then(career => {
@@ -45,7 +45,7 @@ export const careerGetById = function (request, response) {
 export const careerCreate =  function (request, response) {
 	if(!request.body) return response.sendStatus(400);
 	const { img, bgColor, title, descr, theme, language, knowledge } = request.body;
-	models.CoursesCareer.create({
+	models.CareerPath.create({
 		img: img,
 		bgColor: bgColor,
 		title: title,
@@ -64,7 +64,7 @@ export const careerCreate =  function (request, response) {
 export const careerEdit = function (request, response) {
 	if(!request.body) return response.sendStatus(400);
 	const { img, bgColor, title, descr, theme, language, knowledge } = request.body;
-	models.CoursesCareer.update(
+	models.CareerPath.update(
 		{
 			img: img,
 			bgColor: bgColor,
@@ -84,7 +84,7 @@ export const careerEdit = function (request, response) {
 };
 
 export const careerDelete = function(request, response) {
-	models.CoursesCareer.destroy({
+	models.CareerPath.destroy({
 		where: {id: request.params.id}
 	}).then(() => {
 		response.send({success: true});
