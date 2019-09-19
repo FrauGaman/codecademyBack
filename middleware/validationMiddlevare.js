@@ -1,5 +1,5 @@
 import {ERROR_MESSAGE, ERRORS} from '../const';
-import {linkValid, setMaxLength, stringValidator} from './validation';
+import {linkValid, setMaxLength, stringValidator, emailValidator, passwordValidator} from './validation';
 
 export const idValidation = (request, response, next) => {
 	if(!request.params.id) {
@@ -15,6 +15,27 @@ export const idValidation = (request, response, next) => {
 
 export const dataValidation = (request, response, next) => {
 	let message = [];
+	//registration
+	if (request.body.firstName !== undefined && request.body.lastName !== undefined && request.body.email !== undefined && request.body.password !== undefined) {
+		if (!request.body.firstName || !request.body.lastName) {
+			(message.indexOf(ERROR_MESSAGE.NO_FIELD) === -1) && message.push(ERROR_MESSAGE.NO_FIELD)
+		} else{
+			let stringVal = stringValidator(request.body.firstName);
+			(stringVal !== undefined) && message.push(stringVal)
+		}
+		if (!request.body.email) {
+			(message.indexOf(ERROR_MESSAGE.NO_FIELD) === -1) && message.push(ERROR_MESSAGE.NO_FIELD)
+		} else {
+			let stringVal = emailValidator(request.body.email);
+			(stringVal !== undefined) && message.push(stringVal)
+		}
+		if (!request.body.password) {
+			(message.indexOf(ERROR_MESSAGE.NO_FIELD) === -1) && message.push(ERROR_MESSAGE.NO_FIELD)
+		} else {
+			let stringVal = passwordValidator(request.body.password);
+			(stringVal !== undefined) && message.push(stringVal)
+		}
+	}
 	//name
 	if (request.body.name !== undefined) {
 		if (!request.body.name) {

@@ -1,6 +1,7 @@
 import express from 'express';
 const bodyParser = require("body-parser");
 import { sequelize } from './models';
+import { register } from './controllers/registrationController';
 import { careerGet, careerGetById, careerCreate, careerEdit, careerDelete } from './controllers/careerController';
 import { skillGet, skillGetById, skillCreate, skillEdit, skillDelete } from './controllers/skillController';
 import { coursesGet, coursesGetById, coursesCreate, coursesEdit, coursesDelete } from './controllers/allCoursesController';
@@ -12,6 +13,8 @@ import { idValidation, dataValidation } from './middleware/validationMiddlevare'
 const app = express();
 //parser for usual JSON
 app.use(bodyParser.json());
+
+app.post('/registration', dataValidation, register);
 
 app.get('/careerPath', careerGet);
 app.get('/careerPath/:id', idValidation, careerGetById);
