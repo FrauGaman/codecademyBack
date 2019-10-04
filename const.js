@@ -16,6 +16,8 @@ export const  ERROR_MESSAGE = {
     STRING_VIEW: 'valid characters: a-z, а-я, ё,0-9',
     EMAIL_VIEW: 'Invalid email format',
     PASSWORD_VIEW: 'Password must contain at least 1 number, 1 special character, one Latin letter in lowercase, one Latin letter in uppercase, for a password of at least 6 characters',
+
+    INCORRECT_DATA: 'Data is incorrect',
 };
 
 export const ERRORS = {

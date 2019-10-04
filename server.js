@@ -1,7 +1,9 @@
 import express from 'express';
 const bodyParser = require("body-parser");
 import { sequelize } from './models';
+import { auth } from './controllers/scripts/auth';
 import { register } from './controllers/registrationController';
+import { verifyToken } from './middleware/checkToken';
 import { careerGet, careerGetById, careerCreate, careerEdit, careerDelete } from './controllers/careerController';
 import { skillGet, skillGetById, skillCreate, skillEdit, skillDelete } from './controllers/skillController';
 import { coursesGet, coursesGetById, coursesCreate, coursesEdit, coursesDelete } from './controllers/allCoursesController';
@@ -14,9 +16,11 @@ const app = express();
 //parser for usual JSON
 app.use(bodyParser.json());
 
+app.get('/auth', auth);
+
 app.post('/registration', dataValidation, register);
 
-app.get('/careerPath', careerGet);
+app.get('/careerPath', verifyToken, careerGet);
 app.get('/careerPath/:id', idValidation, careerGetById);
 app.post('/careerPath', dataValidation, careerCreate);
 app.put('/careerPath/:id', idValidation, dataValidation, careerEdit);
@@ -53,7 +57,7 @@ app.put('/knowledge/:id', idValidation, dataValidation, knowledgeEdit);
 app.delete('/knowledge/:id', idValidation, knowledgeDelete);
 
 sequelize.sync().then( async () => {
-    app.listen(3000, () => {
-        console.log(`Example app listening on port 3000!`)
+    app.listen(3002, () => {
+        console.log(`Example app listening on port 3002!`)
     })
 });

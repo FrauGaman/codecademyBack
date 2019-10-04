@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
         Registration.password = bcrypt.hashSync(Registration.password, salt);
       }
     },
+    tableName: 'users',
   });
   return Registration;
 };
