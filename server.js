@@ -11,12 +11,15 @@ import { themeGet, themeGetById, themeCreate, themeEdit, themeDelete } from './c
 import { languageGet, languageGetById, languageCreate, languageEdit, languageDelete } from './controllers/languageController';
 import { knowledgeGet, knowledgeById, knowledgeCreate, knowledgeEdit, knowledgeDelete } from './controllers/knowledgeController';
 import { idValidation, dataValidation } from './middleware/validationMiddlevare';
+import refreshToken from './controllers/scripts/refreshToken';
 
 const app = express();
 //parser for usual JSON
 app.use(bodyParser.json());
 
 app.get('/auth', auth);
+
+app.post('/token', refreshToken);
 
 app.post('/registration', dataValidation, register);
 

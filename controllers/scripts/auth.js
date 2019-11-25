@@ -3,7 +3,10 @@ import bcrypt from 'bcryptjs';
 import createToken from './createToken';
 import {ERRORS, ERROR_MESSAGE} from '../../const';
 
+export let tokensList = {};
+
 export const auth = async (request, response) => {
+	tokensList = {};
 	if (!request.body) return response.sendStatus(400);
 	const {email, password} = request.body;
 	const user = await models.Registration.findOne({
@@ -16,14 +19,17 @@ export const auth = async (request, response) => {
 		await bcrypt.compare(password, user.password, await function (err, result) {
 			if (result === true) {
 				let userData = {
+					id: user.dataValues.id,
 					firstName: user.dataValues.firstName,
 					lastName: user.dataValues.lastName,
 					email: user.dataValues.email,
 				};
 				let token = createToken(userData);
+				tokensList.refreshToken = token.refreshToken;
 				response.send({
 					success: true,
-					token
+					accessToken: token.accessToken,
+					refreshToken: token.refreshToken,
 				})
 			} else {
 				response.status(400).send({
@@ -41,6 +47,4 @@ export const auth = async (request, response) => {
 			message: ERROR_MESSAGE.INCORRECT_DATA,
 		});
 	}
-
-
 };
